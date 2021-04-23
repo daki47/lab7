@@ -1,0 +1,123 @@
+#include <iostream>
+#define PI 3.14
+#include <math.h>
+#include <cstring>
+
+using namespace std;
+
+class Toy {
+
+public:
+    virtual float getVolume() = 0;
+    virtual float getWeight() = 0;
+};
+
+class Shape : public Toy {
+protected:
+    char color[100];
+    int density;
+public:
+    // methods definition here
+    Shape(char *color, int density)
+    {
+        strcpy(this->color,color);
+        this->density=density;
+    }
+};
+
+
+class Balls : public Shape{
+    int radius;
+public:
+    Balls(char *color, int density, int radius) : Shape(color,density)
+    {
+        this->radius=radius;
+    }
+
+   
+    float getVolume(){
+        return (4.0/3)*PI*pow(radius,3);
+    }
+     float getWeight(){
+        return getVolume()*density;
+    }
+
+};
+class Cubes : public Shape{
+    int width;
+    int height;
+    int depth;
+public:
+    Cubes(char *color, int density, int width,int height, int depth) : Shape(color,density)
+    {
+        this->width=width;
+        this->height=height;
+        this->depth=depth;
+    }
+   float getWeight(){
+        return getVolume()*density;
+    }
+    float getVolume(){
+        return width*height*depth;
+    }
+};
+
+
+int main(){
+    char color[100];
+    int density,radius,width,height,depth;
+	//enter the toys informain
+    int n;
+   // Shape *shapes;
+   cin>>n;
+    Toy ** toys = new Toy * [n];
+    int choose;
+    for(int i=0;i<n;i++)
+    {
+        cin>>choose;
+        if(choose==1)
+        {
+            cin>>color>>density>>radius;
+            toys[i] = new Balls(color, density ,radius);
+           // cout<<"for Ball toy: "<<i<<" Volume: "<<toys[i]->getVolume()<<"         Weight: "<<toys[i]->getWeight()<<endl;
+        }
+        else
+        {
+            cin>>color>>density>>width>>height>>depth;
+            toys[i] = new Cubes(color,density,width,height,depth);
+            //cout<<"for Cube toy: "<<i<<" Volume: "<<toys[i]->getVolume()<<"         Weight: "<<toys[i]->getWeight()<<endl;
+        }
+    }
+
+    //enter the Petra's cube information
+            cin>>color>>density>>width>>height>>depth;
+            toys[n] = new Cubes(color,density,width,height,depth);
+            //cout<<"for toy: Petra :"<<" Volume: "<<toys[n]->getVolume()<<"         Weight: "<<toys[n]->getWeight()<<endl;
+
+
+
+	//1
+	float weight=0;
+	float max=0;
+     for(int i=0;i<n;i++)
+     {
+         if(max<toys[i]->getVolume())
+         {
+          max=toys[i]->getVolume();
+         }
+        weight+=toys[i]->getWeight();
+     }
+     //cout<<"Weight: "<<weight<<endl;
+     if(weight>=toys[n]->getWeight())
+     {
+        cout<<"YES"<<endl;
+     }
+     else
+        cout<<"NO"<<endl;
+
+	//2
+float diff=abs(max-toys[n]->getVolume());
+cout<<"The difference is: "<<diff<<endl;
+
+	return 0;
+}
