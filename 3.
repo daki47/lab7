@@ -208,5 +208,6 @@ int main() {
     cout << "Number wider then 5 is: " << p.vehiclesWiderThan(5) << endl;
     Automobile a(1200, 4, 3, 5);
     cout << "Number of trucks with max weight larger then the automobile is: " << p.greaterMaxWeightThan(a) << endl;
+    
     return 0;
 }
