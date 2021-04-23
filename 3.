@@ -211,3 +211,199 @@ int main() {
     
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+#include<iostream>
+using namespace std;
+
+class Vehicle
+{
+protected:
+    float mass;
+    int width;
+    int height;
+public:
+    Vehicle(float mass=0, int width=0, int height=0){
+        this->mass=mass;
+        this->width=width;
+        this->height=height;
+    }
+    Vehicle(const Vehicle & v){
+        this->mass=v.mass;
+        this->width=v.width;
+        this->height=v.height;
+    }
+
+      virtual int id()
+      {
+          return 6;
+      }
+};
+
+class Automobile : public Vehicle
+{
+    int nDoors;
+public:
+    Automobile(float mass=0, int width=0, int height=0, int nDoors=0):Vehicle(mass,width,height){
+        this->nDoors=nDoors;
+    }
+
+virtual int id()
+{
+    return 0;
+}
+};
+
+class Bus : public Vehicle
+{
+   int nPassangers;
+   public:
+       Bus(float mass=0, int width=0, int height=0, int nPassangers=0) : Vehicle(mass,width,height)  {
+          this->nPassangers=nPassangers;
+       }
+
+virtual int id()
+{
+    return 1;
+}
+};
+
+class Truck : public Vehicle
+{
+    float max_weight;
+public:
+    Truck(float mass=0, int width=0, int height=0, float max_weight=0) : Vehicle(mass,width,height){
+        this->max_weight=max_weight;
+    }
+
+virtual int id()
+{
+    return 2;
+}
+};
+
+class Parking
+{
+    int nElements;
+    Vehicle **vehicles;
+public:
+     Parking(int nElements=0){
+         this->nElements=nElements;
+     }
+
+      Parking(const Parking & p)
+    {
+        this->nElements=p.nElements;
+        for(int i=0;i<nElements;i++)
+        {
+            this->vehicles[i]=p.vehicles[i];
+        }
+    }
+     Parking &operator+=(Vehicle *v)
+    {
+        vehicles[++nElements]=v;
+        return *this;
+     }
+
+
+
+
+     void print()
+     {
+         int x=0,z=0,y=0;
+         for(int i=0;i<nElements;i++)
+         {
+             if(vehicles[i]->id()==0)
+                x++;
+             if(vehicles[i]->id()==1)
+                    z++;
+             if(vehicles[i]->id()==2)
+                y++;
+         }
+
+         cout<<"Automobiles: "<<x<<endl;
+         cout<<"Busses: "<<z<<endl;
+         cout<<"Trucks: "<<y<<endl;
+     }
+};
+
+int main() {
+    Parking p;
+    int n;
+    cin >> n;
+    int width, height, broj;
+    float mass, max_weight;
+    for (int i = 0; i < n; i++) {
+        int type;
+        cin >> type;
+        if (type == 1) {
+            cin >> mass >> width >> height >> broj;
+            Automobile *a = new Automobile(mass, width, height, broj);
+            p += a;
+        }
+        if (type == 2) {
+            cin >> mass >> width >> height >> broj;
+            p += new Bus(mass, width, height, broj);
+        }
+        if (type == 3) {
+            cin >> mass >> width >> height >> max_weight;
+            p += new Truck(mass, width, height, max_weight);
+        }
+    }
+ p.print();
+ /*   cout << "\nDaily profit: " << p.dailyProfit() << endl;
+    cout << "Total mass: " << p.totallMass() << endl;
+    cout << "Number wider then 5 is: " << p.vehiclesWiderThan(5) << endl;
+    Automobile a(1200, 4, 3, 5);
+    cout << "Number of trucks with max weight larger then the automobile is: " << p.greaterMaxWeightThan(a) << endl;*/
+    return 0;
+}
+*/
