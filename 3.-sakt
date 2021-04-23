@@ -1,0 +1,232 @@
+#include<iostream>
+#include <string.h>
+using namespace std;
+
+class Vehicle {
+  protected:
+    double mass;
+    int width,height;
+    
+    public:
+    
+    Vehicle (double m=0.0, int s=0 , int v=0)
+    {
+       mass=m;
+       width=s;
+       height=v;
+     
+    }
+    
+    virtual int dailyPrice()=0;
+    
+    void set_mass(double m)
+    {
+       mass=m;
+    }
+    void set_width(int s)
+    {
+      width=s;
+    }
+    
+    void set_height (int v)
+    {
+      height=v;
+    }
+    
+    double get_mass ()
+    {
+     return mass;
+    }
+    
+    int get_width ()
+    {
+      return width;
+    }
+    
+    int  get_height ()
+    {
+      return height;
+    }
+
+};
+class Automobile : public Vehicle {
+  protected:
+    int numberDoors;
+    public:
+    
+    Automobile (double m=0.0 ,int s=0,int v=0,int d=0): Vehicle (m,s,v)
+    {
+       numberDoors=d;
+    }
+    
+    int get_numberDoors ()
+    {
+     return numberDoors;
+    }
+    
+    int dailyPrice ()
+    {
+        
+     if (numberDoors<5)
+     {
+       return 100;
+     }
+        else 
+        {
+         return 130;
+        }
+        
+    }
+
+};
+
+class Bus : public Vehicle{
+ protected:
+    double nrPassengers;
+    
+    public:
+    Bus (double m=0.0 ,int s=0,int v=0 ,double p=0.0) : Vehicle (m,s,v){
+        nrPassengers=p;
+    }
+    double get_nr_passengers ()
+    {
+     return nrPassengers;
+    }
+    
+    int dailyPrice ( )
+    {
+     return nrPassengers*5;
+    }
+    
+};
+
+class Truck : public Vehicle{
+  protected :
+    double maxWeight;
+    
+    public:
+    
+    Truck (double m=0.0 ,int s=0,int v=0,double w=0)  : Vehicle (m,s,v) {
+         maxWeight=w;
+    }
+    
+    double get_max_weight ()
+    {
+      return maxWeight;
+    }
+    
+    
+    int dailyPrice ( )
+    {
+      return (mass+maxWeight)*0.02;
+    }
+  
+
+};
+
+class Parking  {
+private:
+    Vehicle **v;
+    int broj;
+public:
+    Parking() {
+        v=new Vehicle*[100];
+        broj=0;
+    }
+    Parking(Vehicle **vv, int n) {
+        broj=n;
+        v=new Vehicle*[broj];
+        for(int i=0; i<broj; i++)
+            v[i]=vv[i];
+    }
+    ~Parking() {
+        for(int i=0; i<broj; i++)
+            delete v[i];
+    }
+    Parking &operator+=(Vehicle *v1) {
+        v[broj++]=v1;
+        return *this;
+    }
+    
+    float totallMass() {
+        float n=0.0;
+        for(int i=0; i<broj; i++)
+            n+=v[i]->get_mass();
+        return n;
+    }
+    float vehiclesWiderThan (int n) {
+        int c=0;
+        for(int i=0; i<broj; i++)
+            if(v[i]->get_width()>n)
+                c++;
+        return c;
+    }
+    int dailyProfit() {
+        int c=0;
+        for(int i=0; i<broj; i++)
+            c+=v[i]->dailyPrice();
+        return c;
+    }
+    void print() {
+        int x=0,y=0,z=0;
+        for(int i=0; i<broj; i++) {
+            Automobile *a=dynamic_cast<Automobile*>(v[i]);
+            if(a!=0)
+                x++;
+            Bus *s=dynamic_cast<Bus*>(v[i]);
+            if(s!=0)
+                y++;
+            Truck *n=dynamic_cast<Truck*>(v[i]);
+            if(n!=0)
+                z++;
+        }
+        cout << "Automobiles: "<< x <<endl;
+        cout << "Busses: "<< y <<endl;
+        cout << "Trucks: "<< z <<endl;
+    }
+    int greaterMaxWeightThan(Vehicle& m) {
+        int c=0;
+        for(int i=0; i<broj; i++) {
+            Truck *b=dynamic_cast<Truck*>(v[i]);
+            if(b!=0)
+                if(m.get_mass()<v[i]->get_mass())
+                    c++;
+        }
+        return c;
+    }
+
+};
+
+int main() {
+    Parking p;
+    int n;
+    cin >> n;
+    int width, height, broj;
+    float mass, max_weight;
+    for (int i = 0; i < n; i++) {
+        int type;
+        cin >> type;
+        if (type == 1) {
+            cin >> mass >> width >> height >> broj;
+            Automobile *a = new Automobile(mass, width, height, broj);
+            p += a;
+        }
+        if (type == 2) {
+            cin >> mass >> width >> height >> broj;
+            p += new Bus(mass, width, height, broj);
+        }
+        if (type == 3) {
+            cin >> mass >> width >> height >> max_weight;
+            p += new Truck(mass, width, height, max_weight);
+        }
+    }
+
+    p.print();
+    cout << "\nDaily profit: " << p.dailyProfit() << endl;
+    cout << "Total mass: " << p.totallMass() << endl;
+    cout << "Number wider then 5 is: " << p.vehiclesWiderThan(5) << endl;
+    Automobile a(1200, 4, 3, 5);
+    cout << "Number of trucks with max weight larger then the automobile is: " << p.greaterMaxWeightThan(a) << endl;
+    
+    return 0;
+    }
