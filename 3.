@@ -99,9 +99,9 @@ public:
 
 class Parking
 {
-
     Vehicle *vehicles;
     int nElements;
+    //Vehicle ** vehicles= new Vehicle * [nElements];
 
     void copy(const Parking & p)
      {
