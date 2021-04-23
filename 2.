@@ -1,0 +1,238 @@
+#include<iostream>
+#include<cstring>
+#define PI 3.14
+
+using namespace std;
+
+enum Color{red,green,blue};
+
+class Shape
+{
+protected:
+    Color color;
+    char id[5];
+    char *description;
+public:
+    Shape(char *id,char *description,Color color)
+    {
+        strcpy(this->id,id);
+        this->description=new char[strlen(description)+1];
+        strcpy(this->description,description);
+        this->color=color;
+    }
+    ~Shape()
+    {
+        delete [] description;
+    }
+    bool operator <(Shape & s)//duhet me ndreq
+    {
+        return this->perimeter()<s.perimeter();
+    }
+
+ virtual char *type()=0;
+    virtual double area()=0;
+    virtual double perimeter()=0;
+    virtual void draw()=0;
+};
+
+class Circle : public Shape
+{
+    double radius;
+
+    char s[7]="circle";
+public:
+    Circle(char *id, char *description,Color color, double radius) : Shape(id,description,color){
+        this->radius=radius;
+    }
+    virtual double area()
+    {return radius*radius*PI;}
+    virtual double perimeter()
+    {return 2*PI*radius;}
+    virtual void draw() {
+        cout<<id<<" ";
+     switch(color)
+        {
+    case 0:
+        cout<<"RED "<<description<<" type: circle "<<perimeter()<<" "<<area()<<endl;
+        break;
+    case 1:
+         cout<<"GREEN "<<description<<" type: circle "<<perimeter()<<" "<<area()<<endl;
+         break;
+    case 2:
+         cout<<"BLUE "<<description<<" type: circle "<<perimeter()<<" "<<area()<<endl;
+         break;
+        }
+    }
+
+    virtual char *type()
+    {
+     return s;
+    }
+};
+
+class Rectangle : public Shape
+{
+ double a;
+ double b;
+
+char s[10]="rectangle";
+ public:
+      Rectangle(char *id,char *description,Color color, double a, double b) : Shape(id,description,color){
+        this->a=a;
+        this->b=b;
+    }
+ virtual char *type()
+ {
+     return s;
+ }
+    virtual double area()
+    {return a*b;}
+    virtual double perimeter()
+    {return 2*a+2*b;}
+    virtual void draw(){
+         cout<<id<<" ";
+        switch(color)
+{
+    case 0:
+        cout<<"RED "<<description<<" type: rectangle "<<perimeter()<<" "<<area()<<endl;
+        break;
+    case 1:
+         cout<<"GREEN "<<description<<" type: rectangle "<<perimeter()<<" "<<area()<<endl;
+         break;
+    case 2:
+         cout<<"BLUE "<<description<<" type: rectangle "<<perimeter()<<" "<<area()<<endl;
+         break;
+    }
+    }
+};
+
+class Square : public Shape
+{
+     double a;
+
+     char s[7]="square";
+ public:
+      Square(char *id,char *description,Color color, double a) : Shape(id,description,color){
+        this->a=a;
+    }
+ virtual char *type()
+ {
+     return s;
+ }
+    virtual double area()
+    {return a*a;}
+    virtual double perimeter()
+    {return 4*a;}
+    virtual void draw(){
+        cout<<id<<" ";
+        switch(color)
+{
+    case 0:
+        cout<<"RED "<<description<<" type: square "<<perimeter()<<" "<<area()<<endl;
+        break;
+    case 1:
+         cout<<"GREEN "<<description<<" type: square "<<perimeter()<<" "<<area()<<endl;
+         break;
+    case 2:
+         cout<<"BLUE "<<description<<" type: square "<<perimeter()<<" "<<area()<<endl;
+         break;
+    }
+    }
+
+};
+
+
+
+double totalArea (Shape **shapes,int n)
+{
+    double total=0;
+    for(int i=0;i<n;i++)
+    {
+        total+=shapes[i]->area();
+
+    }
+    return total;
+}
+
+void drawAllFromType(Shape **shapes,int n, char *s)
+{
+    bool flag=false;
+    for(int i=0;i<n;i++)
+    {
+        if(strcmp(s,shapes[i]->type())==0)
+        {
+            flag=true;
+            shapes[i]->draw();
+        }
+    }
+    if(flag==false)
+    {
+        cout<<"There are no shapes from type "<<s<<endl;
+    }
+}
+
+
+Shape *maxPerimeter(Shape **shapes, int n)//jo bash sakt
+{
+    Shape *temp=shapes[0];
+    for(int i=0;i<n;i++)
+    {
+        if(temp->perimeter()<shapes[i]->perimeter())//duhna me shkrujt veq temp<shapes[i] .... ka problem te shape class te bool operator
+        {
+            temp=shapes[i];
+        }
+    }
+    return temp;
+}
+
+int main ()
+{
+
+	int n;
+	cin>>n;
+	//cout<<n;
+	Shape ** shapes = new Shape * [n];
+
+	int type;
+	char id [5];
+	char description[20];
+	int color;
+	double radius, a, b;
+	for (int i=0;i<n;i++) {
+		cin>>type>>id>>description>>color;
+		//cout<<i;
+		switch(type) {
+			case 0: //circle
+			cin>>radius;
+			shapes[i] = new Circle (id, description, (Color) color, radius);
+			break;
+			case 1: //square
+			cin>>a;
+			shapes[i] = new Square (id, description, (Color) color, a);
+			break;
+			case 2: //rectangle
+			cin>>a>>b;
+			shapes[i] = new Rectangle (id, description, (Color) color, a, b);
+			break;
+			default:
+			break;
+
+		}
+	}
+
+
+	cout<<"Total area: "<<totalArea(shapes,n)<<endl;
+	cout<<"Max perimeter of a shape is: "<<(maxPerimeter(shapes,n))->perimeter()<<endl;
+
+	cout<<"Draw only circles"<<endl;
+	drawAllFromType(shapes,n,"circle");
+
+	cout<<"Draw only squares"<<endl;
+	drawAllFromType(shapes,n,"square");
+
+	cout<<"Draw only rectangle"<<endl;
+	drawAllFromType(shapes,n,"rectangle");
+
+	return 0;
+
+}
